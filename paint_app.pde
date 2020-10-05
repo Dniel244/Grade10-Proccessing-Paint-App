@@ -20,7 +20,8 @@ color buttonColor;
 color strokeColor;
 
 PImage rocket;
-boolean RocketOn;
+boolean rocketOn;
+boolean circleOn;
 
 float sliderY;
 float thickness;
@@ -34,7 +35,8 @@ void setup() {
   background(255);
   toolbarColor = grey;
   rocket = loadImage("rocket.png");
-  RocketOn = false;
+  rocketOn = false;
+  circleOn = false;
   sliderY = 550;
   thickness = 10;
   rocketX = 100;
@@ -96,7 +98,7 @@ tactile(150, 575, 15);
 fill(brown);
 circle(150, 575, 30);
 
-tactile(200, 525, 15);
+tactile2(200, 525, 15);
 fill(white);
 circle(200, 525, 30);
 
@@ -124,15 +126,38 @@ line(250, 520, 250, 580);
 
 
 //rocket button
-  tactile2(390, 550, 40);
-  RocketOnOff();
-  strokeWeight(1);
+  tactile(390, 550, 40);
+  rocketOnOff();
+  strokeWeight(2);
   circle(390, 550, 85);
   image(rocket, 360, 520, rocketX2, rocketY2);
 
+//circle button
+if (strokeColor == white || strokeColor == yellow) {
+  tactile2(500, 550, 40);
+}else{
+  tactile(500, 550, 40);
+}
+  circleOnOff();
+ strokeWeight(2);
+fill(strokeColor);
+circle(500, 550, 85);
+if (strokeColor == white || strokeColor == yellow) {
+  fill(black);
+}else{
+fill(white);
+}
+textSize(30);
+textAlign(CENTER, CENTER);
+text("circle", 500, 540);
+
 
 //fill button
-tactile4(565, 508, 100, 85);
+if (strokeColor == white || strokeColor == yellow) {
+  tactile5(565, 508, 100, 85);
+}else{
+  tactile4(565, 508, 100, 85);
+}
 fill(strokeColor);
 rect(565, 508, 100, 85);
 if (strokeColor == white || strokeColor == yellow) {
@@ -143,6 +168,8 @@ fill(white);
 textSize(50);
 textAlign(CENTER, CENTER);
 text("Fill", 615, 544);
+
+
 
 
 //new, load, save
@@ -187,9 +214,9 @@ if (dist(x, y, mouseX, mouseY) < r) {
 
 void tactile2(int x, int y, int r) {
   if (dist(x, y, mouseX, mouseY) < r) {
-    stroke(white);
-  } else {
     stroke(black);
+  } else {
+    stroke(white);
   }
 }
 
@@ -208,31 +235,50 @@ void tactile4(int x, int y, int w, int h) {
     stroke(black);
   }
 }
+
+void tactile5(int x, int y, int w, int h) {
+  if (mouseX > x && mouseX < x+w && mouseY > y && mouseY < y+h) {
+    stroke(black);
+  } else {
+    stroke(white);
+  }
+}
+
+
   
 
 void mouseDragged() {
-  if (RocketOn == false) {
+  if (rocketOn == false && circleOn == false) {
   //squigly line
   strokeWeight(thickness);
   stroke(strokeColor);
   line(pmouseX, pmouseY, mouseX, mouseY);
-  }
+  
+
   controlSlider();
+}
 }
 
 void mousePressed() {
-  if (RocketOn == false) {
+  if (rocketOn == false) {
   //squigly line
   strokeWeight(thickness);
   stroke(strokeColor);
   line(pmouseX, pmouseY, mouseX, mouseY);
-  } else {
+  } else if (rocketOn == true) {
     //rocket drawing
     image(rocket, mouseX, mouseY, rocketX, rocketY);
-  }
+  } //else if (rocketOn == false && circleOn == true) {
+  //ellipse(mouseX, mouseY, pmouseX, pmouseY);
+//}
+
   
   if (mouseX > 350 && mouseX < 430 && mouseY > 500 && mouseY < 600) {
-    RocketOn = !RocketOn;
+    rocketOn = !rocketOn;
+  }
+  
+  if (mouseX > 460 && mouseX < 540 && mouseY > 510 && mouseY < 590) {
+    circleOn = !circleOn;
   }
   //fill
  if (mouseX > 565 && mouseX < 665 && mouseY > 508 && mouseY < 594) {
@@ -258,39 +304,46 @@ void mouseReleased() {
   //line color
   if (mouseX > 35 && mouseX < 65 && mouseY > 510 && mouseY < 540) {  
   strokeColor = red;
-  RocketOn = false;
+  rocketOn = false;
 } else if (mouseX > 35 && mouseX < 65 && mouseY > 560 && mouseY < 590) {
   strokeColor = blue;
-  RocketOn = false;
+  rocketOn = false;
 } else if (mouseX > 85 && mouseX < 115 && mouseY > 510 && mouseY < 540) {
   strokeColor = green;
-  RocketOn = false;
+  rocketOn = false;
 } else if (mouseX > 85 && mouseX < 115 && mouseY > 560 && mouseY < 590) {
   strokeColor = yellow;
-  RocketOn = false;
+  rocketOn = false;
 } else if (mouseX > 135 && mouseX < 165 && mouseY > 510 && mouseY < 540) {
   strokeColor = purple;
-  RocketOn = false;
+  rocketOn = false;
 } else if (mouseX > 135 && mouseX < 165 && mouseY > 560 && mouseY < 590) {
   strokeColor = brown;
-  RocketOn = false;
+  rocketOn = false;
 } else if (mouseX > 185 && mouseX < 215 && mouseY > 510 && mouseY < 540) {
   strokeColor = white;
-  RocketOn = false;
+  rocketOn = false;
 } else if (mouseX > 185 && mouseX < 215 && mouseY > 560 && mouseY < 590) {
   strokeColor = black;
-  RocketOn = false;
+  rocketOn = false;
 }
   //rocket button
   
 }
 
-  void RocketOnOff() {
-    if (RocketOn == true) {
+  void rocketOnOff() {
+    if (rocketOn == true) {
       fill(red);
     } else {
       fill(black);
   }
+  }
+  
+  void circleOnOff() {
+    if (circleOn == true) {
+      stroke(white);
+    }else {
+    }
   }
   
   void controlSlider() {
